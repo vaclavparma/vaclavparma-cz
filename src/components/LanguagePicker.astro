@@ -10,7 +10,7 @@ import { languages } from '../i18n/ui';
     <ul id="language-dropdown">
       {Object.entries(languages).map(([lang, label]) => (
         <li>
-          <a href={`/${lang}/`} class="language-link">{label}</a>
+          <a href={`/${lang}`} class="language-link">{label}</a>
         </li>
       ))}
     </ul>

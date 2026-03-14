@@ -1,18 +1,10 @@
-import { defineConfig } from "astro/config";
-
-import sitemap from "@astrojs/sitemap";
+// @ts-check
+import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://vaclavparma.cz",
-  integrations: [sitemap()],
-  vite: {
-    css: {
-      preprocessorOptions: {
-        css: {
-          additionalData: '@import "./src/global.css";',
-        },
-      },
-    },
-  },
+  trailingSlash: 'never',
+  build: {
+    format: 'file'
+  }
 });

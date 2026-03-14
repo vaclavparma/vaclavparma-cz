@@ -1,66 +1,70 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import StarsBackground from '../components/StarsBackground.astro';
-import Sidebar from '../components/Sidebar.astro';
+import ScrollArrow from '../components/ScrollArrow.astro';
+import LanguagePicker from '../components/LanguagePicker.astro';
 import Footer from '../components/Footer.astro';
-
-import '../global.css';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
+
 <html lang={lang}>
-	<head>    
-    <title>Václav Parma</title>
-    
-		<meta charset="utf-8">
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="canonical" href="https://vaclavparma.cz"/>
-    <meta
-      name="viewport"
-      content="height=device-height, width=device-width, initial-scale=1.0, target-densitydpi=device-dpi" />
-    <meta name="theme-color" content="#121212" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <meta
-      name="description"
-      content={t('description')} />
+	<head> 
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, target-densitydpi=device-dpi" />
+		<link rel="icon" href="/favicon.png" />
+		<title>Václav Parma</title>
+    <meta name="description" content={t('description')} />
     <meta name="author" content="Václav Parma" />
     <meta name="keywords" content={t('keywords')} />
   </head>
   <body>
     <StarsBackground />
-    <Sidebar />
-    <slot />
-    <Footer />
+		<ScrollArrow />
+		<LanguagePicker />
+    <main>
+      <slot />
+    </main>
+		<Footer />
   </body>
 </html>
 
 <style is:global>
-  .section {
-    width: 50%;
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+	* {
+		box-sizing: border-box;
+		max-width: 100vw;
+	}
 
-  .section-heading {
-    width: 100%;
-    text-align: center;
-    border-bottom: 3px solid var(--primary);
-    margin-bottom: 32px;
-  }
+	html {
+		font-family: system-ui, sans-serif;
+		background-color: #121212;
+		color: #e0e0e0;
+		overflow-x: hidden;
+		touch-action: manipulation;
+		scroll-behavior: smooth;
+		overscroll-behavior-y: none;
+	}
 
-  .section-heading h2 {
-    margin-bottom: 8px;
-  }
+	body {
+		margin: 0;
+		padding: 0;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		max-width: 100vw;
+		box-sizing: border-box;
+		overflow-x: hidden;
+	}
 
-  @media (max-width: 768px) {
-    .section {
-      width: 75%;
-    }
-  }
+	main {
+		flex: 1;
+	}
+
+
+	::selection {
+		background: #7871aa;
+	}
 </style>

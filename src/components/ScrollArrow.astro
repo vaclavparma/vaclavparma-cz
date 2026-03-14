@@ -7,12 +7,18 @@
 <style>
   #scroll-arrow {
     position: fixed;
-    top: 95%;
+    top: 94%;
     left: 50%;
     pointer-events: none;
     z-index: -1;
     transition: 0.5s;
     animation: bounce 2s infinite;
+  }
+
+  #scroll-arrow svg {
+    fill: #dbdbdb9d;
+    width: 48px;
+    height: 48px;
   }
 
   @keyframes bounce {
@@ -23,12 +29,6 @@
     50% {
       transform: translateY(-20px) translateX(-50%);
     }
-  }
-
-  #scroll-arrow svg {
-    fill: var(--sub-heading);
-    width: 36px;
-    height: 36px;
   }
 
   @media (max-width: 768px) {
@@ -48,6 +48,8 @@
 
       if (scrollPosition > windowHeight * 0.05) {
         scrollArrow.style.opacity = 0;
+      } else {
+        scrollArrow.style.opacity = 1;
       }
     });
   });

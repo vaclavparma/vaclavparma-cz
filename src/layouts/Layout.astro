@@ -1,4 +1,5 @@
 ---
+import ThemeToggle from '../components/ThemeToggle.astro';
 ---
 
 <html lang="en">
@@ -7,8 +8,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" href="/favicon.png" />
 		<title>Václav Parma</title>
+		<script is:inline>
+			(function () {
+				try {
+					var stored = localStorage.getItem('theme');
+					if (stored === 'light' || stored === 'dark') {
+						document.documentElement.dataset.theme = stored;
+					} else {
+						document.documentElement.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+							? 'dark'
+							: 'light';
+					}
+				} catch (e) {}
+			})();
+		</script>
 	</head>
 	<body>
+		<ThemeToggle />
 		<main>
 			<slot />
 		</main>
@@ -16,8 +32,51 @@
 </html>
 
 <style is:global>
+	:root {
+		--color-primary: #7871aa;
+		--color-primary-hover: #665f96;
+		--color-secondary: #5a6b8c;
+		--color-secondary-hover: #48566f;
+
+		--color-bg: #ffffff;
+		--color-surface: #f4f4f6;
+		--color-text: #16161a;
+		--color-text-muted: #5c5c66;
+		--color-border: #e2e2e6;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--color-primary-hover: #9089c4;
+			--color-secondary-hover: #7f91b3;
+
+			--color-bg: #121212;
+			--color-surface: #1c1c1e;
+			--color-text: #e6e6e6;
+			--color-text-muted: #a0a0a8;
+			--color-border: #2c2c2e;
+		}
+	}
+
+	:root[data-theme='dark'] {
+		--color-primary-hover: #9089c4;
+		--color-secondary-hover: #7f91b3;
+
+		--color-bg: #121212;
+		--color-surface: #1c1c1e;
+		--color-text: #e6e6e6;
+		--color-text-muted: #a0a0a8;
+		--color-border: #2c2c2e;
+	}
+
 	* {
 		box-sizing: border-box;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		* {
+			transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+		}
 	}
 
 	html {
@@ -28,5 +87,12 @@
 		margin: 0;
 		padding: 0;
 		min-height: 100vh;
+		background-color: var(--color-bg);
+		color: var(--color-text);
+	}
+
+	::selection {
+		background: var(--color-primary);
+		color: #fff;
 	}
 </style>

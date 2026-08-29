@@ -1,0 +1,50 @@
+---
+---
+
+<div id="wood-background" aria-hidden="true">
+  <div class="wood-base"></div>
+  <div class="wood-dark-overlay"></div>
+</div>
+
+<style>
+  #wood-background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .wood-base,
+  .wood-dark-overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .wood-base {
+    background:
+      radial-gradient(circle 26vmax at 6% 4%, rgba(255, 231, 180, 0.55), rgba(255, 214, 140, 0.24) 35%, transparent 68%),
+      repeating-linear-gradient(1deg, rgba(0, 0, 0, 0.06) 0px, transparent 1px, transparent 6px, rgba(255, 255, 255, 0.03) 7px, transparent 8px),
+      repeating-linear-gradient(-1.5deg, rgba(0, 0, 0, 0.05) 0px, transparent 2px, transparent 15px),
+      linear-gradient(160deg, #9c7950, #785530 55%, #634427);
+  }
+
+  .wood-dark-overlay {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background:
+      repeating-linear-gradient(1deg, rgba(0, 0, 0, 0.12) 0px, transparent 1px, transparent 6px, rgba(255, 255, 255, 0.015) 7px, transparent 8px),
+      repeating-linear-gradient(-1.5deg, rgba(0, 0, 0, 0.1) 0px, transparent 2px, transparent 15px),
+      linear-gradient(160deg, #362413, #2a1b0f 55%, #1e130a);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .wood-dark-overlay {
+      opacity: 1;
+    }
+  }
+
+  :root[data-theme='dark'] .wood-dark-overlay {
+    opacity: 1;
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from '../components/ThemeToggle.astro';
+import TableBackground from '../components/TableBackground.astro';
 ---
 
 <html lang="en">
@@ -24,6 +25,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 		</script>
 	</head>
 	<body>
+		<TableBackground />
 		<ThemeToggle />
 		<main>
 			<slot />
@@ -38,7 +40,6 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 		--color-secondary: #5a6b8c;
 		--color-secondary-hover: #48566f;
 
-		--color-bg: #ffffff;
 		--color-surface: #f4f4f6;
 		--color-text: #16161a;
 		--color-text-muted: #5c5c66;
@@ -50,7 +51,6 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 			--color-primary-hover: #9089c4;
 			--color-secondary-hover: #7f91b3;
 
-			--color-bg: #121212;
 			--color-surface: #1c1c1e;
 			--color-text: #e6e6e6;
 			--color-text-muted: #a0a0a8;
@@ -87,7 +87,6 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 		margin: 0;
 		padding: 0;
 		min-height: 100vh;
-		background-color: var(--color-bg);
 		color: var(--color-text);
 	}
 

@@ -6,5 +6,8 @@ export default defineConfig({
   trailingSlash: 'never',
   build: {
     format: 'preserve'
+  },
+  devToolbar: {
+    enabled: false
   }
 });

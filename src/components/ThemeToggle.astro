@@ -1,47 +1,101 @@
 ---
 ---
 
-<button id="theme-toggle" aria-label="Toggle color theme">
-  <svg class="icon icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M12 4V2m0 20v-2M4 12H2m20 0h-2M5.64 5.64 4.22 4.22m15.56 15.56-1.42-1.42M5.64 18.36 4.22 19.78M19.78 4.22l-1.42 1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  <svg class="icon icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/></svg>
+<button id="theme-toggle" aria-label="Pull cord to toggle light/dark">
+  <span class="cord">
+    <span class="cord-line"></span>
+    <span class="cord-bead"></span>
+  </span>
 </button>
 
 <style>
   #theme-toggle {
     position: fixed;
     z-index: 20;
-    top: 16px;
-    right: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
+    top: 0;
+    left: 32px;
+    width: 32px;
+    height: 130px;
     padding: 0;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 50%;
-    color: var(--color-text);
+    border: none;
+    background: transparent;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
   }
 
-  .icon {
-    display: none;
+  .cord {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateY(-50%);
   }
 
-  :root[data-theme='light'] #theme-toggle .icon-sun,
-  :root[data-theme='dark'] #theme-toggle .icon-moon {
-    display: block;
+  .cord-line {
+    width: 8px;
+    height: 128px;
+    background-image: radial-gradient(circle at 50% 35%, rgb(200, 200, 200), rgb(96, 96, 96) 65%, transparent 65%);
+    background-size: 10px 6px;
+    background-repeat: repeat-y;
+    background-position: center top;
+  }
+
+  .cord-bead {
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #6b6864, #423f3a 55%, #232321 100%);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+    transition: background 0.4s ease;
+  }
+
+  :root[data-theme='light'] .cord-bead {
+    background: radial-gradient(circle at 35% 30%, #8d8a84, #69645c 55%, #474742 100%);
+  }
+
+  @keyframes cord-tug {
+    0% {
+      transform: translateY(-50%);
+    }
+    30% {
+      transform: translateY(calc(-50% + 10px));
+    }
+    55% {
+      transform: translateY(calc(-50% + 8px));
+    }
+    75% {
+      transform: translateY(calc(-50% - 4px));
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+
+  .cord.tugging {
+    animation: cord-tug 0.5s ease;
   }
 </style>
 
 <script is:inline>
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    const root = document.documentElement;
-    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem('theme', next);
-    } catch (e) {}
-  });
+  (function () {
+    const button = document.getElementById('theme-toggle');
+    const cord = button.querySelector('.cord');
+
+    button.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch (e) {}
+
+      cord.classList.remove('tugging');
+      void cord.offsetWidth;
+      cord.classList.add('tugging');
+    });
+
+    cord.addEventListener('animationend', () => cord.classList.remove('tugging'));
+  })();
 </script>

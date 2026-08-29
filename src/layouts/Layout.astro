@@ -1,70 +1,32 @@
 ---
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import StarsBackground from '../components/StarsBackground.astro';
-import ScrollArrow from '../components/ScrollArrow.astro';
-import LanguagePicker from '../components/LanguagePicker.astro';
-import Footer from '../components/Footer.astro';
-
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
 ---
 
-
-<html lang={lang}>
-	<head> 
+<html lang="en">
+	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, target-densitydpi=device-dpi" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" href="/favicon.png" />
 		<title>Václav Parma</title>
-    <meta name="description" content={t('description')} />
-    <meta name="author" content="Václav Parma" />
-    <meta name="keywords" content={t('keywords')} />
-  </head>
-  <body>
-    <StarsBackground />
-		<ScrollArrow />
-		<LanguagePicker />
-    <main>
-      <slot />
-    </main>
-		<Footer />
-  </body>
+	</head>
+	<body>
+		<main>
+			<slot />
+		</main>
+	</body>
 </html>
 
 <style is:global>
 	* {
 		box-sizing: border-box;
-		max-width: 100vw;
 	}
 
 	html {
 		font-family: system-ui, sans-serif;
-		background-color: #121212;
-		color: #e0e0e0;
-		overflow-x: hidden;
-		touch-action: manipulation;
-		scroll-behavior: smooth;
-		overscroll-behavior-y: none;
 	}
 
 	body {
 		margin: 0;
 		padding: 0;
 		min-height: 100vh;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		max-width: 100vw;
-		box-sizing: border-box;
-		overflow-x: hidden;
-	}
-
-	main {
-		flex: 1;
-	}
-
-
-	::selection {
-		background: #7871aa;
 	}
 </style>

@@ -1,0 +1,35 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+export const getStaticPaths = () => {
+  const langs = ['en', 'cs'];
+  return [
+    { params: { lang: undefined }, props: { lang: 'en' } },
+    ...langs.map((lang) => ({ params: { lang }, props: { lang } })),
+  ];
+};
+
+const { lang } = Astro.props;
+const dir = path.resolve(`./public/cv/${lang}`);
+const pdf = fs
+  .readdirSync(dir)
+  .filter((f) => f.toLowerCase().endsWith('.pdf'))
+  .sort()
+  .at(-1);
+
+if (!pdf) {
+  throw new Error(`No CV PDF found in public/cv/${lang}`);
+}
+
+const url = `/cv/${lang}/${pdf}`;
+---
+<html>
+  <head>
+    <meta http-equiv="refresh" content={`0; url=${url}`} />
+    <link rel="canonical" href={url} />
+  </head>
+  <body>
+    <script set:html={`window.location.replace(${JSON.stringify(url)});`}></script>
+  </body>
+</html>

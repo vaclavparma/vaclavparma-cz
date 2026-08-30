@@ -1,0 +1,150 @@
+---
+interface Props {
+  color?: string;
+  pageColor?: string;
+  textColor?: string;
+  width?: string;
+}
+
+const {
+  color = '#7a2e2e',
+  pageColor = '#efe6cf',
+  textColor = '#2a2420',
+  width = '160px',
+} = Astro.props as Props;
+---
+
+<div
+  class="book-scene"
+  style={`--book-color: ${color}; --page-color: ${pageColor}; --text-color: ${textColor}; width: ${width};`}
+>
+  <div class="book">
+    <div class="cover-back"></div>
+    <div class="page page-left">
+      <div class="page-content">
+        <slot name="left" />
+      </div>
+      <div class="page-flip page-flip-prev" data-flip="prev"></div>
+    </div>
+    <div class="page page-right">
+      <div class="page-content">
+        <slot name="right" />
+      </div>
+      <div class="page-flip page-flip-next" data-flip="next"></div>
+    </div>
+    <div class="spine-shadow"></div>
+  </div>
+</div>
+
+<style>
+  .book-scene {
+    aspect-ratio: 3 / 2;
+    perspective: 3200px;
+    filter: drop-shadow(18px 26px 22px rgba(0, 0, 0, 0.45));
+    pointer-events: none;
+  }
+
+  .book {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(25deg) translateY(var(--book-slide, 0px));
+    transition: transform 0.5s ease;
+  }
+
+  .cover-back {
+    position: absolute;
+    inset: -2% -1.2%;
+    border-radius: 10px;
+    background:
+      radial-gradient(140% 110% at 12% 8%, rgba(255, 255, 255, 0.09), transparent 60%),
+      radial-gradient(140% 110% at 88% 96%, rgba(0, 0, 0, 0.3), transparent 60%),
+      radial-gradient(circle at 22% 32%, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px),
+      radial-gradient(circle at 68% 74%, rgba(0, 0, 0, 0.09) 0 1px, transparent 1px),
+      radial-gradient(circle at 82% 24%, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px),
+      radial-gradient(circle at 42% 82%, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px),
+      radial-gradient(circle at 10% 62%, rgba(0, 0, 0, 0.06) 0 1px, transparent 1px),
+      var(--book-color);
+    background-size:
+      100% 100%,
+      100% 100%,
+      7px 7px,
+      5px 5px,
+      9px 9px,
+      6px 6px,
+      8px 8px,
+      100% 100%;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+  }
+
+  .page {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background:
+      linear-gradient(155deg, rgba(255, 255, 255, 0.07), transparent 50%),
+      var(--page-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .page-left {
+    left: 0;
+    border-radius: 12px 3px 3px 12px;
+  }
+
+  .page-right {
+    right: 0;
+    border-radius: 3px 12px 12px 3px;
+  }
+
+  .page-content {
+    height: 100%;
+    padding: 4%;
+    overflow: hidden;
+    color: var(--text-color);
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+
+  .page-flip {
+    position: absolute;
+    bottom: 0;
+    width: 9%;
+    aspect-ratio: 1;
+    cursor: pointer;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.2s ease;
+  }
+
+  .page-flip[data-disabled='true'] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .page-flip-prev {
+    left: 0;
+    clip-path: polygon(0 100%, 100% 100%, 0 0);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.16));
+    border-radius: 0 0 0 3px;
+  }
+
+  .page-flip-next {
+    right: 0;
+    clip-path: polygon(100% 100%, 0 100%, 100% 0);
+    background: linear-gradient(225deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.16));
+    border-radius: 0 0 3px 0;
+  }
+
+  .spine-shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1.4%;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.45), transparent);
+    pointer-events: none;
+  }
+</style>

@@ -1,7 +1,170 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Book from '../components/Book.astro';
+import BookPage from '../components/BookPage.astro';
+
+const pageModules = import.meta.glob('../journal/pages/*.astro', { eager: true }) as Record<
+  string,
+  { default: any }
+>;
+const pages = Object.keys(pageModules)
+  .sort()
+  .map((key) => pageModules[key].default);
 ---
 
 <Layout>
-  
+  <div class="book-stage">
+    <div class="book-frame">
+      <div class="book-slot book-slot-light">
+        <Book color="#181614" pageColor="#f2ead8" textColor="#2a2420" width="100%" />
+      </div>
+      <div class="book-slot book-slot-dark">
+        <Book color="#5c4230" pageColor="#2b2622" textColor="#e8ddc4" width="100%" />
+      </div>
+    </div>
+  </div>
+
+  <div id="journal-pages" hidden>
+    {pages.map((PageComponent, i) => (
+      <template class="journal-page-template" data-page-index={i}>
+        <BookPage pageNumber={i + 1}>
+          <PageComponent />
+        </BookPage>
+      </template>
+    ))}
+    <template id="journal-blank-page">
+      <BookPage />
+    </template>
+  </div>
 </Layout>
+
+<style>
+  .book-stage {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .book-frame {
+    position: relative;
+    width: min(94vw, 135vh, 1400px);
+    aspect-ratio: 3 / 2;
+  }
+
+  .book-slot {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const root = document.documentElement;
+    const lightBook = document.querySelector('.book-slot-light .book');
+    const darkBook = document.querySelector('.book-slot-dark .book');
+    const PARKED = '-1900px';
+    const SHOWN = '0px';
+    const EXIT_MS = 500;
+
+    function placeInstant(el, value) {
+      el.style.transition = 'none';
+      el.style.setProperty('--book-slide', value);
+      void el.offsetWidth;
+      el.style.transition = '';
+    }
+
+    let currentTheme = root.dataset.theme === 'dark' ? 'dark' : 'light';
+    placeInstant(lightBook, currentTheme === 'light' ? SHOWN : PARKED);
+    placeInstant(darkBook, currentTheme === 'dark' ? SHOWN : PARKED);
+
+    const observer = new MutationObserver(() => {
+      const next = root.dataset.theme === 'dark' ? 'dark' : 'light';
+      if (next === currentTheme) return;
+
+      const outgoing = currentTheme === 'dark' ? darkBook : lightBook;
+      const incoming = next === 'dark' ? darkBook : lightBook;
+      currentTheme = next;
+
+      outgoing.style.setProperty('--book-slide', PARKED);
+
+      placeInstant(incoming, PARKED);
+      setTimeout(() => {
+        incoming.style.setProperty('--book-slide', SHOWN);
+      }, EXIT_MS);
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  })();
+</script>
+
+<script is:inline>
+  (function () {
+    const templates = [...document.querySelectorAll('#journal-pages template.journal-page-template')];
+    const blankTemplate = document.getElementById('journal-blank-page');
+    const totalPages = templates.length;
+    const totalSpreads = Math.max(1, Math.ceil(totalPages / 2));
+    let currentSpread = 0;
+
+    const leftTargets = document.querySelectorAll('.page-left .page-content');
+    const rightTargets = document.querySelectorAll('.page-right .page-content');
+    const prevFlips = document.querySelectorAll('.page-flip-prev');
+    const nextFlips = document.querySelectorAll('.page-flip-next');
+    const frame = document.querySelector('.book-frame');
+
+    function fill(targets, template) {
+      const useTemplate = template || blankTemplate;
+      targets.forEach((el) => {
+        el.replaceChildren();
+        el.appendChild(useTemplate.content.cloneNode(true));
+      });
+    }
+
+    function render() {
+      fill(leftTargets, templates[currentSpread * 2]);
+      fill(rightTargets, templates[currentSpread * 2 + 1]);
+      const atStart = currentSpread === 0;
+      const atEnd = currentSpread >= totalSpreads - 1;
+      prevFlips.forEach((el) => el.setAttribute('data-disabled', String(atStart)));
+      nextFlips.forEach((el) => el.setAttribute('data-disabled', String(atEnd)));
+    }
+
+    function goPrev() {
+      if (currentSpread > 0) {
+        currentSpread--;
+        render();
+      }
+    }
+
+    function goNext() {
+      if (currentSpread < totalSpreads - 1) {
+        currentSpread++;
+        render();
+      }
+    }
+
+    prevFlips.forEach((el) => el.addEventListener('click', goPrev));
+    nextFlips.forEach((el) => el.addEventListener('click', goNext));
+
+    let scrollLocked = false;
+    frame.addEventListener(
+      'wheel',
+      (event) => {
+        if (Math.abs(event.deltaY) < 10 || scrollLocked) return;
+        event.preventDefault();
+        scrollLocked = true;
+        if (event.deltaY > 0) goNext();
+        else goPrev();
+        setTimeout(() => {
+          scrollLocked = false;
+        }, 500);
+      },
+      { passive: false },
+    );
+
+    render();
+  })();
+</script>

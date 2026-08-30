@@ -1,0 +1,65 @@
+---
+interface Props {
+  pageNumber?: number;
+}
+
+const { pageNumber } = Astro.props as Props;
+---
+
+<div class="book-page">
+  <div class="book-page-dots"></div>
+  <div class="book-page-content">
+    <slot />
+  </div>
+  {pageNumber !== undefined && <div class="book-page-number">{pageNumber}</div>}
+</div>
+
+<style>
+  .book-page {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .book-page-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(currentColor 1px, transparent 1.5px);
+    background-size: 20px 20px;
+    background-position: 0 15px;
+    opacity: 0.28;
+    pointer-events: none;
+  }
+
+  .book-page-content {
+    position: relative;
+  }
+
+  .book-page-content :global(p),
+  .book-page-content :global(li),
+  .book-page-content :global(h1),
+  .book-page-content :global(h2),
+  .book-page-content :global(h3),
+  .book-page-content :global(h4) {
+    margin: 0;
+    font-size: 1em;
+    line-height: 20px;
+  }
+
+  .book-page-content :global(h1),
+  .book-page-content :global(h2),
+  .book-page-content :global(h3),
+  .book-page-content :global(h4) {
+    font-weight: bold;
+  }
+
+  .book-page-number {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    font-size: 1.1em;
+    opacity: 0.55;
+  }
+</style>

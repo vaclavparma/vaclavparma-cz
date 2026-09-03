@@ -20,16 +20,19 @@ const {
 >
   <div class="book">
     <div class="cover-back"></div>
+    <div class="cover-shade"></div>
     <div class="page page-left">
       <div class="page-content">
         <slot name="left" />
       </div>
+      <div class="page-shade"></div>
       <div class="page-flip page-flip-prev" data-flip="prev"></div>
     </div>
     <div class="page page-right">
       <div class="page-content">
         <slot name="right" />
       </div>
+      <div class="page-shade"></div>
       <div class="page-flip page-flip-next" data-flip="next"></div>
     </div>
     <div class="spine-shadow"></div>
@@ -49,8 +52,7 @@ const {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transform: rotateX(25deg) translateY(var(--book-slide, 0px));
-    transition: transform 0.5s ease;
+    transform: rotateX(25deg);
   }
 
   .cover-back {
@@ -78,11 +80,32 @@ const {
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
   }
 
+  .cover-shade {
+    position: absolute;
+    inset: -2% -1.2%;
+    border-radius: 10px;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .cover-shade {
+      opacity: 0.45;
+    }
+  }
+
+  :root[data-theme='dark'] .cover-shade {
+    opacity: 0.45;
+  }
+
   .page {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 50%;
+    overflow: hidden;
     background:
       linear-gradient(155deg, rgba(255, 255, 255, 0.07), transparent 50%),
       var(--page-color);
@@ -107,11 +130,40 @@ const {
     font-family: Georgia, 'Times New Roman', serif;
   }
 
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .page-content {
+      color: #c3b6e8;
+    }
+  }
+
+  :root[data-theme='dark'] .page-content {
+    color: #c3b6e8;
+  }
+
+  .page-shade {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .page-shade {
+      opacity: 0.7;
+    }
+  }
+
+  :root[data-theme='dark'] .page-shade {
+    opacity: 0.7;
+  }
+
   .page-flip {
     position: absolute;
-    bottom: 0;
-    width: 9%;
-    aspect-ratio: 1;
+    bottom: 8px;
+    width: 22px;
+    height: 22px;
     cursor: pointer;
     opacity: 1;
     pointer-events: auto;
@@ -123,18 +175,66 @@ const {
     pointer-events: none;
   }
 
+  .page-flip::before,
+  .page-flip::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    border-radius: 1px;
+    background: rgba(0, 0, 0, 0.32);
+  }
+
+  .page-flip::before {
+    width: 15px;
+  }
+
+  .page-flip::after {
+    width: 8px;
+  }
+
   .page-flip-prev {
+    left: 8px;
+  }
+
+  .page-flip-prev::before,
+  .page-flip-prev::after {
     left: 0;
-    clip-path: polygon(0 100%, 100% 100%, 0 0);
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.16));
-    border-radius: 0 0 0 3px;
+    transform-origin: left bottom;
+    transform: rotate(-45deg);
+  }
+
+  .page-flip-prev::after {
+    left: 16px;
+    bottom: 16px;
   }
 
   .page-flip-next {
+    right: 8px;
+  }
+
+  .page-flip-next::before,
+  .page-flip-next::after {
     right: 0;
-    clip-path: polygon(100% 100%, 0 100%, 100% 0);
-    background: linear-gradient(225deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.16));
-    border-radius: 0 0 3px 0;
+    transform-origin: right bottom;
+    transform: rotate(45deg);
+  }
+
+  .page-flip-next::after {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .page-flip::before,
+    :root:not([data-theme='light']) .page-flip::after {
+      background: rgba(255, 255, 255, 0.16);
+    }
+  }
+
+  :root[data-theme='dark'] .page-flip::before,
+  :root[data-theme='dark'] .page-flip::after {
+    background: rgba(255, 255, 255, 0.16);
   }
 
   .spine-shadow {

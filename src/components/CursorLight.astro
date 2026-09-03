@@ -1,0 +1,44 @@
+---
+---
+
+<div id="cursor-light" aria-hidden="true"></div>
+
+<style>
+  #cursor-light {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 420px;
+    height: 420px;
+    margin: -210px 0 0 -210px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(120, 113, 170, 0.45), rgba(120, 113, 170, 0.16) 45%, transparent 70%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    transform: translate(var(--cursor-x, -9999px), var(--cursor-y, -9999px));
+    transition: opacity 0.4s ease;
+  }
+
+  :root[data-theme='dark'] #cursor-light.is-active {
+    opacity: 1;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    const el = document.getElementById('cursor-light');
+
+    window.addEventListener('mousemove', (event) => {
+      el.style.setProperty('--cursor-x', event.clientX + 'px');
+      el.style.setProperty('--cursor-y', event.clientY + 'px');
+      el.classList.add('is-active');
+    });
+
+    window.addEventListener('mouseleave', () => {
+      el.classList.remove('is-active');
+    });
+  })();
+</script>

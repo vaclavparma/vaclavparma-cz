@@ -1,6 +1,7 @@
 ---
 import ThemeToggle from '../components/ThemeToggle.astro';
 import TableBackground from '../components/TableBackground.astro';
+import CursorLight from '../components/CursorLight.astro';
 ---
 
 <html lang="en">
@@ -26,6 +27,7 @@ import TableBackground from '../components/TableBackground.astro';
 	</head>
 	<body>
 		<TableBackground />
+		<CursorLight />
 		<ThemeToggle />
 		<main>
 			<slot />
@@ -51,10 +53,10 @@ import TableBackground from '../components/TableBackground.astro';
 			--color-primary-hover: #9089c4;
 			--color-secondary-hover: #7f91b3;
 
-			--color-surface: #1c1c1e;
+			--color-surface: #1a1720;
 			--color-text: #e6e6e6;
-			--color-text-muted: #a0a0a8;
-			--color-border: #2c2c2e;
+			--color-text-muted: #9a94ac;
+			--color-border: #2a2530;
 		}
 	}
 
@@ -63,10 +65,10 @@ import TableBackground from '../components/TableBackground.astro';
 		--color-secondary-hover: #7f91b3;
 
 		--color-bg: #121212;
-		--color-surface: #1c1c1e;
+		--color-surface: #1a1720;
 		--color-text: #e6e6e6;
-		--color-text-muted: #a0a0a8;
-		--color-border: #2c2c2e;
+		--color-text-muted: #9a94ac;
+		--color-border: #2a2530;
 	}
 
 	* {
